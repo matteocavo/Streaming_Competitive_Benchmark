@@ -210,6 +210,9 @@ __marimo__/
 data/raw/
 data/clean/
 
+# Power BI files
+PowerBI/
+
 # API keys
 .env
 .env.*
