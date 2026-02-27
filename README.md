@@ -131,8 +131,8 @@ For the full dashboard breakdown and documentation → 👉 [`dashboard/README.m
 ## ⚙️ Setup
 
 ```bash
-git clone https://github.com/matteocavo/streaming-benchmark
-cd streaming-benchmark
+git clone https://github.com/matteocavo/Streaming_Competitive_Benchmark
+cd Streaming_Competitive_Benchmark
 pip install -r requirements.txt
 export TMDB_API_KEY="your_api_key_here"
 ```
