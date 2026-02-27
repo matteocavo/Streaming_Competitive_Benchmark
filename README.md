@@ -8,7 +8,31 @@ This project analyzes how major streaming platforms differentiate their content 
 
 **Markets analyzed:** DE · ES · FR · GB · IT · KR · US
 
+---
+
+## 🔹 Data Source
+
+All title-level metadata used in this project is sourced from the TMDB (The Movie Database) API.
+
+Data includes:
+- Title metadata (movie / TV)
+- Release year
+- Genres
+- Origin country
+- Language
+- Popularity
+- Vote average
+- Vote count
+
+The dataset is collected programmatically via the TMDB API under its terms of service.
+
+Official website: https://www.themoviedb.org/  
+API documentation: https://developer.themoviedb.org/
+
 > *This product uses the TMDB API but is not endorsed or certified by TMDB.*
+
+Raw API responses are stored locally and not redistributed in this repository.
+Only derived analytical datasets are versioned.
 
 ---
 
