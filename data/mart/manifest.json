@@ -1,0 +1,55 @@
+{
+  "snapshot_date": "2026-02-21",
+  "current_year": 2026,
+  "source": "TMDB",
+  "layer": "mart",
+  "row_counts": {
+    "provider_catalog_mart": 127399,
+    "provider_market_metrics": 27,
+    "overlap_matrix": 68
+  },
+  "providers": [
+    "Amazon Prime Video",
+    "Apple TV Plus",
+    "Disney Plus",
+    "Netflix",
+    "Paramount Plus"
+  ],
+  "countries": [
+    "DE",
+    "ES",
+    "FR",
+    "GB",
+    "IT",
+    "KR",
+    "US"
+  ],
+  "recency_buckets": {
+    "Recent": "release_year >= 2021",
+    "Mid": "2011 < release_year < 2021",
+    "Legacy": "release_year <= 2011"
+  },
+  "metrics": [
+    "catalog_size",
+    "unique_titles",
+    "movie_pct",
+    "tv_pct",
+    "weighted_rating",
+    "recent_pct",
+    "mid_pct",
+    "legacy_pct",
+    "localization_index",
+    "recency_intensity_score",
+    "genre_concentration_idx",
+    "intl_diversification_score",
+    "jaccard_similarity"
+  ],
+  "notes": [
+    "Amazon Prime Video available only for US, GB, DE \u2014 TMDB does not map flatrate for IT, FR, ES, KR.",
+    "Paramount Plus available only for US, GB, FR.",
+    "Jaccard similarity computed on tmdb_id sets per country.",
+    "Recency Intensity Score: vote_count-weighted avg (Recent=3, Mid=2, Legacy=1).",
+    "Genre Concentration Index: Herfindahl index on primary_genre shares.",
+    "International Diversification Score: pct_non_local * log(distinct_countries) / log(100)."
+  ]
+}
