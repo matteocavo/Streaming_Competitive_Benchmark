@@ -67,7 +67,6 @@ Streaming_Benchmark_Project/
 │   ├── screenshots/                      # Dashboard page exports
 │   └── README.md                         # Dashboard documentation
 │
-├── requirements.txt
 └── README.md
 ```
 
@@ -133,9 +132,12 @@ For the full dashboard breakdown and documentation → 👉 [`dashboard/README.m
 ```bash
 git clone https://github.com/matteocavo/Streaming_Competitive_Benchmark
 cd Streaming_Competitive_Benchmark
-pip install -r requirements.txt
+python -m pip install requests pandas numpy pyarrow jupyter
 export TMDB_API_KEY="your_api_key_here"
 ```
+
+`pyarrow` reads and writes the Parquet marts. No versions are pinned because the
+repository has no tested lockfile.
 
 Run notebooks in order — see [`notebooks/README.md`](notebooks/README.md) for details.
 
@@ -158,8 +160,18 @@ These limitations do not invalidate the analysis but should be considered when i
 
 ## 📄 License
 
-Portfolio project. Data sourced from the TMDB API under their terms of service.
+Original code is licensed under the [MIT License](LICENSE). TMDB metadata remains
+subject to TMDB's terms; the software license does not relicense source data.
+Raw API responses are not redistributed. The committed `data/mart/` Parquet files
+are derived aggregates of TMDB metadata and remain subject to TMDB's terms; the MIT
+License covers the original code, not the source data.
 
 ---
 
+## Related work
+
+[Streaming Metadata Analytics](https://github.com/matteocavo/streaming-metadata-analytics)
+uses synthetic viewing data to demonstrate engagement KPIs; this project instead
+benchmarks reported TMDB catalog availability. Neither dataset proves causal
+content strategy effects.
 *Matteo Cavo — 2026*

@@ -124,7 +124,7 @@ Provider-pair grain: one row per `(country, provider_a, provider_b)`.
 ## Setup
 
 ```bash
-pip install -r requirements.txt
+python -m pip install requests pandas numpy pyarrow jupyter
 export TMDB_API_KEY="your_api_key_here"
 ```
 
