@@ -36,7 +36,7 @@ API documentation: https://developer.themoviedb.org/
 TMDB and JustWatch attributions are separate requirements: TMDB for the title metadata, JustWatch for the provider availability data.
 
 Raw API responses are stored locally and not redistributed in this repository.
-Only derived analytical datasets are versioned.
+The versioned `data/mart/` files are the analytical marts. `provider_catalog_mart.parquet` is title-level (TMDB metadata and provider availability); the other two marts are aggregates. See the License section.
 
 ---
 
@@ -161,7 +161,7 @@ Run notebooks in order — see [`notebooks/README.md`](notebooks/README.md) for 
 | **`tmdb_id` across media types** | `unique_titles` and the Jaccard sets use `tmdb_id` alone, but 307 (provider, market, `tmdb_id`) combinations appear both as movie and as TV. A check on `(media_type, tmdb_id)` keys with deduplicated rows gives an average pairwise Jaccard of about 0.007 instead of 0.008. The published marts have not been regenerated |
 | **Language normalization** | `original_language` reflects primary production language — multilingual co-productions are assigned a single code |
 
-These limitations do not invalidate the analysis but should be considered when interpreting absolute values. Relative comparisons across providers within the same dataset remain valid.
+These limitations should be considered when interpreting the results. Absolute values are affected by the duplicate rows and ID collisions above, and relative comparisons across providers have not been validated: Paramount Plus US is overstated, movie/TV ID collisions change overlap counts (the largest changes in a check were in pairs that include Amazon Prime Video), and rating comparisons are unvalidated.
 
 ---
 
