@@ -30,6 +30,10 @@ Official website: https://www.themoviedb.org/
 API documentation: https://developer.themoviedb.org/
 
 > *This product uses the TMDB API but is not endorsed or certified by TMDB.*
+>
+> *Streaming availability data (watch providers) is provided by JustWatch, via the TMDB API.*
+
+TMDB and JustWatch attributions are separate requirements: TMDB for the title metadata, JustWatch for the provider availability data.
 
 Raw API responses are stored locally and not redistributed in this repository.
 Only derived analytical datasets are versioned.
@@ -82,7 +86,7 @@ Full documentation: 📄 [`notebooks/README.md`](notebooks/README.md)
 Queries the TMDB API across a 5 providers × 7 markets grid. Handles pagination and rate limiting. Exports raw data to Parquet.
 
 ### `02_cleaning.ipynb` — Data Preparation
-Normalizes schema, deduplicates by `tmdb_id`, standardizes country codes, assigns recency buckets and computes weighted ratings.
+Normalizes schema, deduplicates titles by `(tmdb_id, media_type)` and availability by `(tmdb_id, media_type, provider_id, country)`, standardizes country codes, assigns recency buckets and computes weighted ratings.
 
 ### `03_build_mart.ipynb` — Analytical Mart
 Builds three tables at different analytical grains: title-level, provider × market, and provider-pair. See [`notebooks/README.md`](notebooks/README.md) for full column documentation.
@@ -95,7 +99,7 @@ Builds three tables at different analytical grains: title-level, provider × mar
 |---|---|
 | **Catalog Scale** | Total unique titles per provider and market |
 | **Recency Investment** | Share and intensity of recent content |
-| **Content Quality** | Vote-weighted quality scoring |
+| **Average Rating** | Vote-count-weighted average of TMDB `vote_average` (not validated as a catalog quality score, see limitations) |
 | **International Exposure** | Non-local content share and language diversity |
 | **Genre Concentration** | Herfindahl index on primary genre distribution |
 | **Competitive Overlap** | Jaccard similarity across all provider pairs |
@@ -151,7 +155,10 @@ Run notebooks in order — see [`notebooks/README.md`](notebooks/README.md) for 
 | **Partial market coverage** | Amazon Prime Video data available only for DE, GB, US — TMDB does not map flatrate availability for IT, FR, ES, KR. Paramount Plus available only for US, GB, FR |
 | **Watch provider API constraints** | TMDB `/watch/providers` endpoint returns current availability — historical catalog changes are not captured |
 | **Popularity bias** | `popularity` score is TMDB-internal and recency-weighted. Older titles are systematically underscored regardless of cultural relevance |
-| **Vote coverage** | A significant portion of titles have `vote_count = 0`, particularly Amazon originals and niche content. Titles with no votes receive `weighted_rating = 0` — aggregate quality metrics reflect this penalization rather than excluding unrated titles |
+| **Vote coverage and rating weights** | `weighted_rating` is `sum(vote_average × vote_count) / sum(vote_count)` over title–market rows. Titles with `vote_count = 0` (8,765 of 127,399 rows, 6.9%) carry zero weight, so they are excluded in effect rather than scored as 0. Heavily voted titles dominate the result (the top 1% of rows hold 12% to 38% of all votes depending on the provider). Treat provider rating comparisons as unvalidated |
+| **Counting units** | `catalog_size` counts title–market observations (127,399 in total, 60,908 for Netflix across 7 markets). `unique_titles` counts distinct `tmdb_id` values within a provider–market pair. Netflix has 14,459 distinct title IDs across all markets. The dashboard labels "Total Titles" (127K) and Netflix "61K" show observations, not unique titles |
+| **Duplicate rows after provider mapping** | Paramount Plus US has 1,371 duplicate `(tmdb_id, media_type, provider, country)` rows after provider names are mapped to one canonical name (3,226 rows against 1,855 distinct). Other provider–market pairs have none. `catalog_size` for Paramount Plus US is overstated; the marts have not been regenerated |
+| **`tmdb_id` across media types** | `unique_titles` and the Jaccard sets use `tmdb_id` alone, but 307 (provider, market, `tmdb_id`) combinations appear both as movie and as TV. A check on `(media_type, tmdb_id)` keys with deduplicated rows gives an average pairwise Jaccard of about 0.007 instead of 0.008. The published marts have not been regenerated |
 | **Language normalization** | `original_language` reflects primary production language — multilingual co-productions are assigned a single code |
 
 These limitations do not invalidate the analysis but should be considered when interpreting absolute values. Relative comparisons across providers within the same dataset remain valid.
@@ -162,9 +169,12 @@ These limitations do not invalidate the analysis but should be considered when i
 
 Original code is licensed under the [MIT License](LICENSE). TMDB metadata remains
 subject to TMDB's terms; the software license does not relicense source data.
-Raw API responses are not redistributed. The committed `data/mart/` Parquet files
-are derived aggregates of TMDB metadata and remain subject to TMDB's terms; the MIT
-License covers the original code, not the source data.
+Raw API responses are not redistributed. `data/mart/provider_catalog_mart.parquet` is
+title-level: it holds TMDB metadata per title (ID, title, genres, ratings, popularity)
+and the provider availability per market, sourced via JustWatch. The two smaller marts
+are aggregates. All of these remain subject to TMDB's terms and JustWatch attribution;
+the MIT License covers the original code, not the source data. Redistribution of the
+title-level file is under review.
 
 ---
 
