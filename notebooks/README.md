@@ -45,17 +45,15 @@ Transforms raw API responses into a normalized, deduplicated dataset.
 **Logic:**
 - Flattens nested JSON fields (genres, origin countries, production companies)
 - Normalizes provider names to canonical form (e.g. `"amazon_prime"` → `"Amazon Prime Video"`)
-- Deduplicates by `tmdb_id` within each provider-market pair
+- Deduplicates titles by `(tmdb_id, media_type)` and availability by `(tmdb_id, media_type, provider_id, country)`; provider IDs are then mapped to a canonical name, which leaves duplicate rows for Paramount Plus US
 - Standardizes origin country codes to ISO 3166-1 alpha-2
 - Assigns recency buckets:
-  - `Recent` — release year ≥ 2023
-  - `Mid` — release year 2020–2022
-  - `Legacy` — release year ≤ 2019
-- Computes weighted rating: `vote_average × log(vote_count + 1)` — stored as integer ×10,000 for Power BI precision compatibility
+  - `Recent` — release year ≥ 2021
+  - `Mid` — release year 2012–2020
+  - `Legacy` — release year ≤ 2011
+- Computes `vote_weight = log(1 + vote_count)` per title. It is not used by the mart's `weighted_rating`.
 
-> **Why log?** A logarithmic transform on `vote_count` attenuates the influence of titles with extremely high vote counts (blockbusters with 100K+ votes) without discarding low-voted titles entirely. This avoids the arbitrary prior required by Bayesian/IMDb-style weighted means while still penalizing titles with near-zero votes. The result is a quality signal that scales more fairly across catalog sizes as different as Apple TV+ (~2K titles) and Netflix (~61K titles).
->
-> **Note on vote_count = 0:** Titles with no votes yield `log(0 + 1) = 0`, resulting in `weighted_rating = 0`. These titles are not excluded from the mart but are effectively penalized to zero — the quality metrics computed in the dashboard reflect this, with aggregate averages pulled down by unrated titles in proportion to their share of the catalog.
+> **Note on `weighted_rating` (notebook 03):** the mart computes `sum(vote_average × vote_count) / sum(vote_count)` per provider–market pair over rows with a vote count and an average. Titles with `vote_count = 0` carry zero weight and are excluded in effect; they are not scored as 0. The raw vote count is the weight, so heavily voted titles dominate. This is a popularity-weighted rating and has not been validated as a measure of catalog quality.
 
 **Output:** `data/clean/titles_clean.parquet`, `data/clean/provider_availability_clean.parquet`
 

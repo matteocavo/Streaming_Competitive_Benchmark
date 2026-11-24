@@ -5,6 +5,8 @@ Strategic catalog benchmarking across major streaming markets.
 Interactive executive dashboard analyzing catalog differentiation across five major streaming platforms in seven global markets.
 
 > *This product uses the TMDB API but is not endorsed or certified by TMDB.*
+>
+> *Streaming availability data (watch providers) is provided by JustWatch, via the TMDB API.*
 
 ---
 
@@ -15,6 +17,8 @@ Interactive executive dashboard analyzing catalog differentiation across five ma
 ---
 
 ## 📘 Dashboard Structure
+
+> **Reading the numbers:** "Total Titles" (127K) and catalog sizes such as Netflix "61K" count title–market observations: 127,399 in total, 60,908 for Netflix across 7 markets. Netflix has 14,459 distinct TMDB title IDs. Paramount Plus US is overstated by 1,371 duplicate rows. See the limitations in the [main README](../README.md).
 
 ### 1️⃣ Executive Overview
 ![Executive Overview](screenshots/overview.png)
@@ -46,9 +50,9 @@ Evaluates non-local content %, US content share and origin country distribution 
 ### 4️⃣ Content Investment Strategy
 ![Content Investment Strategy](screenshots/content.png)
 
-Benchmarks Recent Content %, Recency Intensity, Weighted Rating and Quality Score by provider.
+Benchmarks Recent Content %, Recency Intensity, Weighted Rating and Quality Score by provider. Weighted Rating is a vote-count-weighted average and is dominated by heavily voted titles; provider comparisons are not validated.
 
-**Key insight:** Netflix uniquely combines scale and quality (7.2/10 at 61K titles). Apple TV+ prioritizes freshness over breadth.
+**Key insight:** Netflix combines a large catalog (60,908 title–market observations, 14,459 distinct TMDB IDs) with a high share of recent content. Apple TV+ prioritizes freshness over breadth.
 
 ---
 
@@ -57,7 +61,7 @@ Benchmarks Recent Content %, Recency Intensity, Weighted Rating and Quality Scor
 
 Uses Jaccard similarity to measure catalog intersection across all platform pairs.
 
-**Key insight:** Average Jaccard Similarity = 0.008 — structural differentiation across all providers (<1% overlap). Apple TV+ shows near-zero intersection. Disney exhibits the highest relative overlap.
+**Key insight:** Average Jaccard Similarity = 0.008 as shown (self-comparisons excluded) — overlap below 1% across provider pairs. A check on corrected keys gives about 0.007; the published marts are not regenerated. Apple TV+ shares at most 3 titles with any other provider in any market (at most 1 on corrected keys). Disney+ and Netflix show the highest overlap (Jaccard about 0.04 in FR, IT and GB).
 
 ---
 
@@ -66,7 +70,7 @@ Uses Jaccard similarity to measure catalog intersection across all platform pair
 
 Explores top 5 genres by provider, genre depth index, language diversity, top titles by popularity and top-rated movies & TV.
 
-**Key insight:** Genre concentration is structurally similar across platforms (0.22–0.26). Apple TV+ operates a deliberately narrow linguistic and genre footprint — quality over breadth. Amazon and Netflix lead in language diversity (84 and 72 languages).
+**Key insight:** Genre concentration is similar across platforms: provider–market values range from 0.10 to 0.16 in `provider_market_metrics.parquet`. Apple TV+ has the narrowest linguistic and genre footprint. Amazon and Netflix lead in language diversity (84 and 72 languages).
 
 ---
 
